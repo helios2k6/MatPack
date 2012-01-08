@@ -1,6 +1,6 @@
 package com.nlogneg.matpack;
 
-public enum Operation {
+public enum ParallelOperationType {
 	ADD,
 	SUBTRACT,
 	MULTIPLY,

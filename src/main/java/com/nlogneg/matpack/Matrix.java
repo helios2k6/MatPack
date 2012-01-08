@@ -40,7 +40,7 @@ public abstract class Matrix {
 		return true;
 	}
 	
-	public List<Future<?>> setUpThreadedOperation(Matrix matrixB, Matrix result, Operation operation, double scalar){
+	public List<Future<?>> setUpThreadedOperation(Matrix matrixB, Matrix result, ParallelOperationType operation, double scalar){
 		ThreadCenter tc = ThreadCenter.getInstance();
 		
 		int sublistSize, remainderList, rows, processors, currentRow;

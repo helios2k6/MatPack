@@ -1,11 +1,11 @@
 package com.nlogneg.matpack.simplematrix;
 
 import com.nlogneg.matpack.Matrix;
-import com.nlogneg.matpack.Operation;
+import com.nlogneg.matpack.ParallelOperationType;
 
 public class ParallelOperation implements Runnable{
 
-	private Operation operation;
+	private ParallelOperationType operation;
 	private Matrix matrixA;
 	private Matrix matrixB;
 	private Matrix result;
@@ -15,7 +15,7 @@ public class ParallelOperation implements Runnable{
 	
 	private double scalar;
 
-	public ParallelOperation(Operation operation, Matrix matrixA,
+	public ParallelOperation(ParallelOperationType operation, Matrix matrixA,
 			Matrix matrixB, Matrix result, int rowStart, int rowEnd, double scalar){
 
 		this.operation = operation;
