@@ -70,6 +70,8 @@ public abstract class Matrix {
 		return futures;
 	}
 	
+	public abstract Matrix copyMatrix();
+	
 	public abstract double getElement(int row, int col);
 	public abstract void setElement(int row, int col, double value);
 	
@@ -81,18 +83,54 @@ public abstract class Matrix {
 	 */
 	public abstract Matrix add(Matrix matrixB) throws InvalidDimensionException;
 	
+	/**
+	 * Subtract two matrices (this - matrixB). Throws InvalidDimensionException if
+	 * the matrices cannot be subtracted
+	 * @param matrixB
+	 * @return
+	 * @throws InvalidDimensionException
+	 */
 	public abstract Matrix subtract(Matrix matrixB) throws InvalidDimensionException;
 	
+	/**
+	 * Multiplies two matrices together (this x matrixB) 
+	 * @param matrixB
+	 * @return
+	 * @throws InvalidDimensionException
+	 */
 	public abstract Matrix multiply(Matrix matrixB) throws InvalidDimensionException;
 	
+	/**
+	 * Multiplies a matrix by a scalar
+	 * @param scalar
+	 * @return
+	 */
 	public abstract Matrix scalarMultiply(double scalar);
 	
+	/**
+	 * Divides the matrix by a scalar
+	 * @param scalar
+	 * @return
+	 */
 	public abstract Matrix scalarDivide(double scalar);
 	
-	public abstract Matrix gaussianElimination();
+	/**
+	 * Performs Gaussian Elimination on the matrix. This is a destructive
+	 * function that will alter THIS matrix. You must copy this matrix if you
+	 * wish to preserve the original matrix
+	 */
+	public abstract void gaussianElimination();
 	
+	/**
+	 * Transposes the original matrix and returns the result in a new matrix
+	 * @return
+	 */
 	public abstract Matrix transpose();
 	
+	/**
+	 * Finds the inverse of this matrix and returns the result in a new matrix
+	 * @return
+	 */
 	public abstract Matrix inverse();
 	
 }
