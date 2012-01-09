@@ -1,12 +1,6 @@
 package com.nlogneg.matpack;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.Future;
-
 import com.nlogneg.matpack.exceptions.InvalidDimensionException;
-import com.nlogneg.matpack.simplematrix.ParallelOperation;
-import com.nlogneg.matpack.threadcenter.ThreadCenter;
 
 public abstract class Matrix {
 	private final int rows, cols;
@@ -60,36 +54,6 @@ public abstract class Matrix {
 		}
 		
 		return true;
-	}
-	
-	public List<Future<?>> setUpThreadedOperation(Matrix matrixB, Matrix result, ParallelOperationType operation, double scalar){
-		ThreadCenter tc = ThreadCenter.getInstance();
-		
-		int sublistSize, remainderList, rows, processors, currentRow;
-		List<Future<?>> futures = new ArrayList<Future<?>>();
-		
-		rows = getRows();
-		processors = tc.getNumProcessors();
-		currentRow = 0;
-		
-		sublistSize = rows/tc.getNumProcessors();
-		remainderList = rows%tc.getNumProcessors();
-		
-		for(int i = 0; i < processors-1; i++){
-			ParallelOperation op = new ParallelOperation(operation, this, matrixB, 
-					result, currentRow, currentRow+sublistSize, scalar);
-			
-			currentRow += sublistSize;
-			
-			futures.add(tc.submitTask(op));
-		}
-		
-		ParallelOperation op = new ParallelOperation(operation, this, matrixB,
-				result, currentRow, currentRow+sublistSize+remainderList, scalar);
-		
-		futures.add(tc.submitTask(op));
-		
-		return futures;
 	}
 	
 	public abstract Matrix copyMatrix();
@@ -153,6 +117,6 @@ public abstract class Matrix {
 	 * Finds the inverse of this matrix and returns the result in a new matrix
 	 * @return
 	 */
-	public abstract Matrix inverse();
+	public abstract Matrix inverse() throws InvalidDimensionException;
 	
 }

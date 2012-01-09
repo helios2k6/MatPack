@@ -1,7 +1,6 @@
 package com.nlogneg.matpack.simplematrix;
 
 import com.nlogneg.matpack.Matrix;
-import com.nlogneg.matpack.ParallelOperationType;
 
 public class ParallelOperation implements Runnable{
 
@@ -108,6 +107,9 @@ public class ParallelOperation implements Runnable{
 			break;
 		case TRANSPOSE:
 			transpose();
+			break;
+		case BACK_SUB:
+			
 			break;
 		}
 	}

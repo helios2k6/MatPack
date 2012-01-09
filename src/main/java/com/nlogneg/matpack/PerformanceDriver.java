@@ -5,11 +5,11 @@ import java.util.Random;
 import org.joda.time.DateTime;
 
 import com.nlogneg.matpack.exceptions.InvalidDimensionException;
-import com.nlogneg.matpack.simplematrix.SimpleMatrix;
+import com.nlogneg.matpack.simplematrix.SimpleTwoDimensionalMatrix;
 import com.nlogneg.matpack.threadcenter.ThreadCenter;
 
 public class PerformanceDriver {
-	public static final int MATRIX_SIZE = 2000;
+	public static final int MATRIX_SIZE = 5000;
 	private Random random;
 
 	private Matrix matrixA;
@@ -18,8 +18,10 @@ public class PerformanceDriver {
 	public static void main(String[] args){
 		System.out.println("Starting performance test with " + MATRIX_SIZE + " x " + MATRIX_SIZE);
 		PerformanceDriver driver = new PerformanceDriver();
-		driver.generateRandomMatrices();
-		driver.performanceTest();
+		//driver.generateRandomMatrices();
+		//driver.performanceTest();
+		
+		driver.performRowAccessToColAccess();
 		
 		ThreadCenter.getInstance().shutdown();
 	}
@@ -30,8 +32,8 @@ public class PerformanceDriver {
 	
 	public void init(){
 		random = new Random();
-		matrixA = new SimpleMatrix(MATRIX_SIZE, MATRIX_SIZE);
-		matrixB = new SimpleMatrix(MATRIX_SIZE, MATRIX_SIZE);
+		matrixA = new SimpleTwoDimensionalMatrix(MATRIX_SIZE, MATRIX_SIZE);
+		matrixB = new SimpleTwoDimensionalMatrix(MATRIX_SIZE, MATRIX_SIZE);
 	}
 	
 	public void generateRandomMatrices(){
@@ -57,5 +59,43 @@ public class PerformanceDriver {
 
 		} catch (InvalidDimensionException e) {
 		}
+	}
+	
+	public void performRowAccessToColAccess(){
+		System.out.println("Starting access time checks");
+		Matrix matrix = new SimpleTwoDimensionalMatrix(MATRIX_SIZE, MATRIX_SIZE);
+		
+		for(int i = 0; i < MATRIX_SIZE; i++){
+			for(int j = 0; j < MATRIX_SIZE; j++){
+				matrix.setElement(i, j, random.nextDouble());
+			}
+		}
+		
+		DateTime beforeRowMajorAccess = new DateTime();
+		for(int i = 0; i < MATRIX_SIZE; i++){
+			for(int j = 0; j < MATRIX_SIZE; j++){
+				double d = matrix.getElement(i, j);
+				d = d + 1;
+			}
+		}
+		DateTime afterRowMajorAccess = new DateTime();
+		
+		DateTime beforeColMajorAccess = new DateTime();
+		for(int i = 0; i < MATRIX_SIZE; i++){
+			for(int j = 0; j < MATRIX_SIZE; j++){
+				double d = matrix.getElement(j, i);
+				d = d + 1;
+			}
+		}
+		DateTime afterColMajorAccess = new DateTime();
+		
+		long beforeRow = beforeRowMajorAccess.getMillis();
+		long afterRow = afterRowMajorAccess.getMillis();
+		
+		long beforeCol = beforeColMajorAccess.getMillis();
+		long afterCol = afterColMajorAccess.getMillis();
+		
+		System.out.println("Row Major access time took: " + (afterRow - beforeRow) + " milliseconds for " + MATRIX_SIZE + " x " + MATRIX_SIZE);
+		System.out.println("Column Major access time took: " + (afterCol - beforeCol) + " milliseconds for " + MATRIX_SIZE + " x " + MATRIX_SIZE);
 	}
 }

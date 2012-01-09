@@ -10,7 +10,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.nlogneg.matpack.exceptions.InvalidDimensionException;
-import com.nlogneg.matpack.simplematrix.SimpleMatrix;
+import com.nlogneg.matpack.simplematrix.SimpleTwoDimensionalMatrix;
 import com.nlogneg.matpack.threadcenter.ThreadCenter;
 
 public class TestBasicOperations {
@@ -46,30 +46,30 @@ public class TestBasicOperations {
 
 	@Before
 	public void init(){
-		matrixA = new SimpleMatrix(5, 5);
-		matrixB = new SimpleMatrix(5, 5);
-		invariantResultAdd = new SimpleMatrix(5, 5);
-		invariantResultSubtract = new SimpleMatrix(5, 5);
-		invariantResultMultiplication = new SimpleMatrix(5,5);
+		matrixA = new SimpleTwoDimensionalMatrix(5, 5);
+		matrixB = new SimpleTwoDimensionalMatrix(5, 5);
+		invariantResultAdd = new SimpleTwoDimensionalMatrix(5, 5);
+		invariantResultSubtract = new SimpleTwoDimensionalMatrix(5, 5);
+		invariantResultMultiplication = new SimpleTwoDimensionalMatrix(5,5);
 		
-		matrixC = new SimpleMatrix(3, 2);
-		matrixD = new SimpleMatrix(2, 1);
-		invariantResultMultiplicationNonSquare = new SimpleMatrix(3, 1);
+		matrixC = new SimpleTwoDimensionalMatrix(3, 2);
+		matrixD = new SimpleTwoDimensionalMatrix(2, 1);
+		invariantResultMultiplicationNonSquare = new SimpleTwoDimensionalMatrix(3, 1);
 		
-		matrixE = new SimpleMatrix(1, 3);
-		matrixF = new SimpleMatrix(3, 1);
-		invariantResultMultiEF = new SimpleMatrix(1, 1);
+		matrixE = new SimpleTwoDimensionalMatrix(1, 3);
+		matrixF = new SimpleTwoDimensionalMatrix(3, 1);
+		invariantResultMultiEF = new SimpleTwoDimensionalMatrix(1, 1);
 		
-		matrixG = new SimpleMatrix(4, 4);
-		invariantScalarMulti = new SimpleMatrix(4, 4);
+		matrixG = new SimpleTwoDimensionalMatrix(4, 4);
+		invariantScalarMulti = new SimpleTwoDimensionalMatrix(4, 4);
 		scalarMulti = 13.0;
 		
-		matrixH = new SimpleMatrix(3, 3);
-		invariantScalarDivide = new SimpleMatrix(3, 3);
+		matrixH = new SimpleTwoDimensionalMatrix(3, 3);
+		invariantScalarDivide = new SimpleTwoDimensionalMatrix(3, 3);
 		scalarDivide = 4.0;
 		
-		matrixI = new SimpleMatrix(4, 7);
-		invariantResultTrans = new SimpleMatrix(7, 4);
+		matrixI = new SimpleTwoDimensionalMatrix(4, 7);
+		invariantResultTrans = new SimpleTwoDimensionalMatrix(7, 4);
 		
 		for(int i = 0; i < matrixG.getRows(); i++){
 			for(int j = 0; j < matrixG.getCols(); j++){

@@ -11,7 +11,7 @@ public class ThreadCenter {
 	
 	private ThreadCenter() {
 		numProcessors = Runtime.getRuntime().availableProcessors();
-		threadpool = Executors.newFixedThreadPool(numProcessors);
+		threadpool = Executors.newFixedThreadPool(numProcessors+1);
 	}
 
 	private static class ThreadCenterHolder {
