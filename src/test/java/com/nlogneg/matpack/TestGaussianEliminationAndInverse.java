@@ -5,7 +5,7 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.nlogneg.matpack.simplematrix.SimpleTwoDimensionalMatrix;
+import com.nlogneg.matpack.simpleTwoDimensionalMatrix.SimpleTwoDimensionalMatrix;
 
 public class TestGaussianEliminationAndInverse {
 	private Matrix matrixA;

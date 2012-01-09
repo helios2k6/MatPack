@@ -10,7 +10,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.nlogneg.matpack.exceptions.InvalidDimensionException;
-import com.nlogneg.matpack.simplematrix.SimpleTwoDimensionalMatrix;
+import com.nlogneg.matpack.simpleTwoDimensionalMatrix.SimpleTwoDimensionalMatrix;
 import com.nlogneg.matpack.threadcenter.ThreadCenter;
 
 public class TestBasicOperations {

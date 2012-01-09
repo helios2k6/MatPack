@@ -1,4 +1,4 @@
-package com.nlogneg.matpack.simplematrix;
+package com.nlogneg.matpack.simpleTwoDimensionalMatrix;
 
 import java.util.ArrayList;
 import java.util.List;
