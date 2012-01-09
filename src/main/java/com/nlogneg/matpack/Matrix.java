@@ -11,6 +11,26 @@ import com.nlogneg.matpack.threadcenter.ThreadCenter;
 public abstract class Matrix {
 	private final int rows, cols;
 	
+	public static final double PRECISION = 0.000001; //Magic number (10^-6)
+	
+	public static void printMatrix(Matrix matrix){
+		int rows, cols;
+		
+		rows = matrix.getRows();
+		cols = matrix.getCols();
+		
+		StringBuffer buffer = new StringBuffer();
+		
+		buffer.append("[");
+		for(int i = 0; i < rows; i++){
+			for(int j = 0; j < cols; j++){
+				buffer.append(matrix.getElement(i, j)).append(" ");
+			}
+			buffer.append("\n");
+		}
+		buffer.append("]\n");
+	}
+	
 	public Matrix(int rows, int cols){
 		this.rows = rows;
 		this.cols = cols;
@@ -31,7 +51,9 @@ public abstract class Matrix {
 		
 		for(int i = 0; i < getRows(); i++){
 			for(int j = 0; j < getCols(); j++){
-				if(!(getElement(i, j) == matrixB.getElement(i, j))){
+				double equalityResult = Math.abs(getElement(i, j) - matrixB.getElement(i, j));
+				
+				if(equalityResult > PRECISION){
 					return false;
 				}
 			}

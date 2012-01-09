@@ -156,15 +156,15 @@ public class SimpleMatrix extends Matrix{
 		}
 	}
 
-	private void subtractRows(int rowSubtractValue, int rowSubtractFrom){
-		int cols = getCols();
-		for(int i = 0; i < cols; i++){
-			double subtractionValue = getElement(rowSubtractValue, i);
-			double subtractionFromValue = getElement(rowSubtractFrom, i);
-
-			setElement(rowSubtractFrom, i, subtractionFromValue - subtractionValue);
-		}
-	}
+//	private void subtractRows(int rowSubtractValue, int rowSubtractFrom){
+//		int cols = getCols();
+//		for(int i = 0; i < cols; i++){
+//			double subtractionValue = getElement(rowSubtractValue, i);
+//			double subtractionFromValue = getElement(rowSubtractFrom, i);
+//
+//			setElement(rowSubtractFrom, i, subtractionFromValue - subtractionValue);
+//		}
+//	}
 
 	private void subtractRows(double[] rowCopy, int rowSubtractFrom){
 		int cols = getCols();
@@ -173,13 +173,13 @@ public class SimpleMatrix extends Matrix{
 		}
 	}
 
-	private void multiplyRowByScalar(int row, double scalar){
-		int cols = getCols();
-		for(int i = 0; i < cols; i++){
-			double value = getElement(row, i);
-			setElement(row, i, value * scalar);
-		}
-	}
+//	private void multiplyRowByScalar(int row, double scalar){
+//		int cols = getCols();
+//		for(int i = 0; i < cols; i++){
+//			double value = getElement(row, i);
+//			setElement(row, i, value * scalar);
+//		}
+//	}
 
 	private void divideRowByScalar(int row, double scalar){
 		int cols = getCols();
@@ -218,14 +218,14 @@ public class SimpleMatrix extends Matrix{
 		return rowCopy;
 	}
 
-	private double[] divideRowByScalarAndCopy(int row, double scalar){
-		int cols = getCols();
-		double[] rowCopy = new double[cols];
-		for(int i = 0; i < cols; i++){
-			rowCopy[i] = getElement(row, i) / scalar;
-		}
-		return rowCopy;
-	}
+//	private double[] divideRowByScalarAndCopy(int row, double scalar){
+//		int cols = getCols();
+//		double[] rowCopy = new double[cols];
+//		for(int i = 0; i < cols; i++){
+//			rowCopy[i] = getElement(row, i) / scalar;
+//		}
+//		return rowCopy;
+//	}
 
 	private void neutralizeRow(int row){
 		int colIndexOfElement = getColIndexOfNextNonZeroElement(row);
@@ -238,28 +238,26 @@ public class SimpleMatrix extends Matrix{
 	}
 
 	private void forwardElimination(){
-		int rows, cols;
+		int rows;
 
 		rows = getRows();
-		cols = getCols();
 		for(int i = 0; i < rows; i++){
-			for(int j = i; j < cols; j++){
-				int chosenPivotRow = getRowWithLargestPivotValue(i, j);
+			int colIndex = getColIndexOfNextNonZeroElement(i);
+			int chosenPivotRow = getRowWithLargestPivotValue(i, colIndex);
 
-				if(chosenPivotRow > -1){
-					if(i != chosenPivotRow){
-						//Partial pivoting
-						swapRows(i, chosenPivotRow);
-					}
+			if(chosenPivotRow > -1){
+				if(i != chosenPivotRow){
+					//Partial pivoting
+					swapRows(i, chosenPivotRow);
+				}
 
-					neutralizeRow(i);
+				neutralizeRow(i);
 
-					for(int z = i+1; z < rows; z++){
-						double eliminationCoefficent = getElement(z, j);
-						if(eliminationCoefficent != 0){
-							double[] rowCopy = multiplyRowByScalarAndCopy(i, eliminationCoefficent);
-							subtractRows(rowCopy, z);
-						}
+				for(int z = i+1; z < rows; z++){
+					double eliminationCoefficent = getElement(z, colIndex);
+					if(eliminationCoefficent != 0){
+						double[] rowCopy = multiplyRowByScalarAndCopy(i, eliminationCoefficent);
+						subtractRows(rowCopy, z);
 					}
 				}
 			}
@@ -294,7 +292,7 @@ public class SimpleMatrix extends Matrix{
 				for(int j = i-1; j >= 0; j--){
 					double elementAbove = getElement(j, currentColIndex);
 					double[] copy = multiplyRowByScalarAndCopy(i, elementAbove);
-					
+
 					subtractRows(copy, j);
 				}
 			}
@@ -329,7 +327,7 @@ public class SimpleMatrix extends Matrix{
 
 	@Override
 	public Matrix inverse() {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 
