@@ -1,6 +1,7 @@
 package com.nlogneg.matpack;
 
 import com.nlogneg.matpack.exceptions.InvalidDimensionException;
+import com.nlogneg.matpack.exceptions.MatrixOutOfBoundsException;
 
 public abstract class Matrix {
 	private final int rows, cols;
@@ -58,7 +59,7 @@ public abstract class Matrix {
 	
 	public abstract Matrix copyMatrix();
 	
-	public abstract double getElement(int row, int col);
+	public abstract double getElement(int row, int col) throws MatrixOutOfBoundsException;
 	public abstract void setElement(int row, int col, double value);
 	
 	/**

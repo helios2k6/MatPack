@@ -7,6 +7,7 @@ import java.util.concurrent.Future;
 
 import com.nlogneg.matpack.Matrix;
 import com.nlogneg.matpack.exceptions.InvalidDimensionException;
+import com.nlogneg.matpack.exceptions.MatrixOutOfBoundsException;
 import com.nlogneg.matpack.threadcenter.ThreadCenter;
 
 /**
@@ -129,12 +130,12 @@ public class SimpleTwoDimensionalMatrix extends Matrix{
 	}
 
 	@Override
-	public double getElement(int row, int col) {
+	public double getElement(int row, int col) throws MatrixOutOfBoundsException{
 		return matrix[row][col];
 	}
 
 	@Override
-	public void setElement(int row, int col, double value) {
+	public void setElement(int row, int col, double value) throws MatrixOutOfBoundsException{
 		matrix[row][col] = value;
 	}
 
