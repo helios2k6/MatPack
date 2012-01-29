@@ -1,4 +1,4 @@
-package com.nlogneg.matpack.simpleTwoDimensionalMatrix;
+package com.nlogneg.matpack.operations;
 
 public enum ParallelOperationType {
 	ADD,
@@ -6,6 +6,5 @@ public enum ParallelOperationType {
 	MULTIPLY,
 	MULTIPLY_SCALAR,
 	DIVIDE_SCALAR,
-	TRANSPOSE,
-	BACK_SUB;
+	TRANSPOSE;
 }

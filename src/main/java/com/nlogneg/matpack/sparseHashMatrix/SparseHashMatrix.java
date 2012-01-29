@@ -1,39 +1,46 @@
 package com.nlogneg.matpack.sparseHashMatrix;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 import com.nlogneg.matpack.Matrix;
-import com.nlogneg.matpack.common.IntegerTuple;
+import com.nlogneg.matpack.common.IntegerTwoTuple;
 import com.nlogneg.matpack.exceptions.InvalidDimensionException;
 import com.nlogneg.matpack.exceptions.MatrixOutOfBoundsException;
+import com.nlogneg.matpack.operations.ParallelOperationType;
+import com.nlogneg.matpack.threadcenter.ThreadCenterOld;
 
-public class SparseHashMatrix extends Matrix{
+public class SparseHashMatrix extends Matrix {
 	
-	Map<IntegerTuple, Double> matrix;
+	public static final int WORK_ITEM_THRESHOLD = 20;
+	
+	private Map<IntegerTwoTuple, Double> matrix;
 	
 	public SparseHashMatrix(int rows, int cols) {
 		super(rows, cols);
-		matrix = new HashMap<IntegerTuple, Double>();
+		matrix = new HashMap<IntegerTwoTuple, Double>();
 	}
 
-	public Set<IntegerTuple> getTuples(){
+	public Set<IntegerTwoTuple> getTuples(){
 		return matrix.keySet();
 	}
 	
-	@Override
 	public Matrix copyMatrix() {
 		return null;
 	}
 
-	@Override
 	public double getElement(int row, int col) {
 		int numRows = getRows();
 		int numCols = getCols();
 		
 		if(row < numRows && col < numCols){
-			IntegerTuple coords = IntegerTuple.getTuple(row, col);
+			IntegerTwoTuple coords = IntegerTwoTuple.getTuple(row, col);
 			
 			Double d =  matrix.get(coords);
 			
@@ -47,57 +54,126 @@ public class SparseHashMatrix extends Matrix{
 		}
 		
 	}
-	@Override
+
 	public void setElement(int row, int col, double value) {
-		IntegerTuple coords = IntegerTuple.getTuple(row, col);
-		
-		matrix.put(coords, value);
+		if(PRECISION < Math.abs(value)){
+			IntegerTwoTuple coords = IntegerTwoTuple.getTuple(row, col);
+			
+			matrix.put(coords, value);
+		}
 	}
 
-	@Override
 	public Matrix add(Matrix matrixB) throws InvalidDimensionException {
-		
-		
-		return null;
+		if(!checkAdditionAndSubtractionDimenions(matrixB)){
+			throw new InvalidDimensionException();
+		}
+
+		Matrix result = new SparseHashMatrix(getRows(), getCols());
+
+		List<Future<?>> futures = ThreadCenterOld.setUpSimpleThreadedOperation(this, matrixB, result, ParallelOperationType.ADD, 0);
+
+		for(Future<?> f : futures){
+			try {
+				f.get();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			} catch (ExecutionException e) {
+				e.printStackTrace();
+			}
+		}
+
+		return result;
 	}
 
-	@Override
 	public Matrix subtract(Matrix matrixB) throws InvalidDimensionException {
-		// TODO Auto-generated method stub
-		return null;
-	}
+		if(!checkAdditionAndSubtractionDimenions(matrixB)){
+			throw new InvalidDimensionException();
+		}
 
-	@Override
+		Matrix result = new SparseHashMatrix(getRows(), getCols());
+
+		List<Future<?>> futures =  ThreadCenterOld.setUpSimpleThreadedOperation(this, matrixB, result, ParallelOperationType.SUBTRACT, 0);
+
+		for(Future<?> f : futures){
+			try {
+				f.get();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			} catch (ExecutionException e) {
+				e.printStackTrace();
+			}
+		}
+
+		return result;
+	}
+	
 	public Matrix multiply(Matrix matrixB) throws InvalidDimensionException {
-		// TODO Auto-generated method stub
-		return null;
+		if(!checkMultiplicationDimensions(matrixB)){
+			throw new InvalidDimensionException();
+		}
+		
+		Set<IntegerTwoTuple> coords = getTuples();
+		Map<Integer, Set<IntegerTwoTuple>> segregationByRow = new HashMap<Integer, Set<IntegerTwoTuple>>();
+		
+		for(IntegerTwoTuple it : coords){
+			int currentRow = it.getRow();
+			
+			Set<IntegerTwoTuple> row = segregationByRow.get(currentRow);
+			if(row == null){
+				row = new HashSet<IntegerTwoTuple>();
+			}
+			
+			row.add(it);
+			
+			segregationByRow.put(currentRow, row);
+		}
+		
+		Matrix result = new SparseHashMatrix(getRows(), matrixB.getCols());
+		
+		Set<Integer> keychain = segregationByRow.keySet();
+		
+		List<Future<?>> futures = new ArrayList<Future<?>>();
+		
+		for(Integer i : keychain){
+			SparseMatrixParallelOperation parallelOp = new SparseMatrixParallelOperation(segregationByRow.get(i), this, 
+					matrixB, result, ParallelOperationType.MULTIPLY, 0.0, i);
+			
+			futures.add(ThreadCenterOld.getInstance().submitTask(parallelOp));
+		}
+		
+		for(Future<?> f : futures){
+			try {
+				f.get();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			} catch (ExecutionException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return result;
 	}
 
-	@Override
 	public Matrix scalarMultiply(double scalar) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
 	public Matrix scalarDivide(double scalar) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
 	public void gaussianElimination() {
 		// TODO Auto-generated method stub
 		
 	}
 
-	@Override
 	public Matrix transpose() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
 	public Matrix inverse() throws InvalidDimensionException {
 		// TODO Auto-generated method stub
 		return null;

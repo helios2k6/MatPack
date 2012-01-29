@@ -1,8 +1,8 @@
-package com.nlogneg.matpack.simpleTwoDimensionalMatrix;
+package com.nlogneg.matpack.operations;
 
 import com.nlogneg.matpack.Matrix;
 
-public class ParallelOperation implements Runnable{
+public class SimpleParallelOperation implements Runnable{
 
 	private ParallelOperationType operation;
 	private Matrix matrixA;
@@ -14,7 +14,7 @@ public class ParallelOperation implements Runnable{
 	
 	private double scalar;
 
-	public ParallelOperation(ParallelOperationType operation, Matrix matrixA,
+	public SimpleParallelOperation(ParallelOperationType operation, Matrix matrixA,
 			Matrix matrixB, Matrix result, int rowStart, int rowEnd, double scalar){
 
 		this.operation = operation;
@@ -107,9 +107,6 @@ public class ParallelOperation implements Runnable{
 			break;
 		case TRANSPOSE:
 			transpose();
-			break;
-		case BACK_SUB:
-			
 			break;
 		}
 	}

@@ -1,6 +1,5 @@
 package com.nlogneg.matpack;
 
-import com.nlogneg.matpack.exceptions.InvalidDimensionException;
 import com.nlogneg.matpack.exceptions.MatrixOutOfBoundsException;
 
 public abstract class Matrix {
@@ -48,7 +47,7 @@ public abstract class Matrix {
 			for(int j = 0; j < getCols(); j++){
 				double equalityResult = Math.abs(getElement(i, j) - matrixB.getElement(i, j));
 				
-				if(equalityResult > PRECISION){
+				if(PRECISION < equalityResult){
 					return false;
 				}
 			}
@@ -57,67 +56,30 @@ public abstract class Matrix {
 		return true;
 	}
 	
+	public final boolean checkAdditionAndSubtractionDimenions(Matrix b){
+		if(rows == b.getRows() && cols == b.getCols()){
+			return true;
+		}
+		return false;
+	}
+	
+	public final boolean checkMultiplicationDimensions(Matrix b){
+		if(cols == b.getRows()){
+			return true;
+		}
+		return false;
+	}
+	
+	public final boolean checkInverseDimensions(){
+		if(rows == cols){
+			return true;
+		}
+		return false;
+	}
+	
 	public abstract Matrix copyMatrix();
 	
 	public abstract double getElement(int row, int col) throws MatrixOutOfBoundsException;
 	public abstract void setElement(int row, int col, double value);
-	
-	/**
-	 * Add two matrices together (this + matrixB). Throws InvalidDimensionException if
-	 * the matrices cannot be added together
-	 * @param matrixB Matrix to add to this matrix
-	 * @return a newly constructed matrix with the sum of the two matrices
-	 */
-	public abstract Matrix add(Matrix matrixB) throws InvalidDimensionException;
-	
-	/**
-	 * Subtract two matrices (this - matrixB). Throws InvalidDimensionException if
-	 * the matrices cannot be subtracted
-	 * @param matrixB
-	 * @return
-	 * @throws InvalidDimensionException
-	 */
-	public abstract Matrix subtract(Matrix matrixB) throws InvalidDimensionException;
-	
-	/**
-	 * Multiplies two matrices together (this x matrixB) 
-	 * @param matrixB
-	 * @return
-	 * @throws InvalidDimensionException
-	 */
-	public abstract Matrix multiply(Matrix matrixB) throws InvalidDimensionException;
-	
-	/**
-	 * Multiplies a matrix by a scalar
-	 * @param scalar
-	 * @return
-	 */
-	public abstract Matrix scalarMultiply(double scalar);
-	
-	/**
-	 * Divides the matrix by a scalar
-	 * @param scalar
-	 * @return
-	 */
-	public abstract Matrix scalarDivide(double scalar);
-	
-	/**
-	 * Performs Gaussian Elimination on the matrix. This is a destructive
-	 * function that will alter THIS matrix. You must copy this matrix if you
-	 * wish to preserve the original matrix
-	 */
-	public abstract void gaussianElimination();
-	
-	/**
-	 * Transposes the original matrix and returns the result in a new matrix
-	 * @return
-	 */
-	public abstract Matrix transpose();
-	
-	/**
-	 * Finds the inverse of this matrix and returns the result in a new matrix
-	 * @return
-	 */
-	public abstract Matrix inverse() throws InvalidDimensionException;
 	
 }

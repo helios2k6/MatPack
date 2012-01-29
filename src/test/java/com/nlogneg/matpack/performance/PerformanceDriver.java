@@ -1,10 +1,12 @@
-package com.nlogneg.matpack;
+package com.nlogneg.matpack.performance;
 
 import java.util.Random;
 
 import org.joda.time.DateTime;
 
+import com.nlogneg.matpack.Matrix;
 import com.nlogneg.matpack.exceptions.InvalidDimensionException;
+import com.nlogneg.matpack.operations.MatrixOperation;
 import com.nlogneg.matpack.simpleTwoDimensionalMatrix.SimpleTwoDimensionalMatrix;
 
 public class PerformanceDriver {
@@ -67,7 +69,7 @@ public class PerformanceDriver {
 		}
 		System.out.println("Starting multiplication test with " + MATRIX_SIZE + " x " + MATRIX_SIZE);
 		DateTime before = new DateTime();
-		matrixA.multiply(matrixB);
+		MatrixOperation.multiply(matrixA, matrixB);
 		DateTime after = new DateTime();
 
 		long beforeAsLong = before.getMillis();
