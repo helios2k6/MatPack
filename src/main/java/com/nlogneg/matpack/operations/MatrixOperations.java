@@ -17,14 +17,23 @@ public class MatrixOperations {
 	}
 
 	public static Matrix add(Matrix a, Matrix b) throws InvalidDimensionException{
+		if(!checkAdditionAndSubtractionDimenions(a, b)){
+			throw new InvalidDimensionException();
+		}
 		return null;
 	}
 
 	public static Matrix subtract(Matrix a, Matrix b) throws InvalidDimensionException{
+		if(!checkAdditionAndSubtractionDimenions(a, b)){
+			throw new InvalidDimensionException();
+		}
 		return null;
 	}
 
 	public static Matrix multiply(Matrix a, Matrix b) throws InvalidDimensionException{
+		if(!checkMultiplicationDimensions(a, b)){
+			throw new InvalidDimensionException();
+		}
 		return null;
 	}
 
@@ -45,6 +54,11 @@ public class MatrixOperations {
 	}
 	
 	public static Matrix inverse(Matrix a) throws InvalidDimensionException{
+		if(!checkInverseDimensions(a)){
+			throw new InvalidDimensionException();
+		}
 		return null;
 	}
+	
+
 }
