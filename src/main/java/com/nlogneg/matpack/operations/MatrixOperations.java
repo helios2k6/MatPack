@@ -1,9 +1,24 @@
 package com.nlogneg.matpack.operations;
 
+import java.util.List;
+
 import com.nlogneg.matpack.Matrix;
 import com.nlogneg.matpack.exceptions.InvalidDimensionException;
 
-public class MatrixOperations {	
+public class MatrixOperations {
+	
+	private static List<MultithreadedAddSubtractOperation> generateAddOperations(Matrix a, Matrix b, Matrix result){
+		return null;
+	}
+	
+	private static List<MultithreadedAddSubtractOperation> generateSubtractOperations(Matrix a, Matrix b, Matrix result){
+		return null;
+	}
+	
+	private static List<MultithreadedMultiplyOperation> generateMultiplyOperations(Matrix a, Matrix b, Matrix result){
+		return null;
+	}
+	
 	private static boolean checkAdditionAndSubtractionDimenions(Matrix a, Matrix b){
 		return (a.getNumRows() == b.getNumRows()) && (a.getNumCols() == b.getNumCols());
 	}
@@ -20,6 +35,7 @@ public class MatrixOperations {
 		if(!checkAdditionAndSubtractionDimenions(a, b)){
 			throw new InvalidDimensionException();
 		}
+		
 		return null;
 	}
 

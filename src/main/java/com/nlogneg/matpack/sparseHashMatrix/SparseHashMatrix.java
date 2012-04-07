@@ -10,19 +10,26 @@ import com.nlogneg.matpack.exceptions.MatrixOutOfBoundsException;
 
 public class SparseHashMatrix extends Matrix {
 
-	private Map<IntegerTwoTuple, Double> matrix;
+	private Map<IntegerTwoTuple, Double> elementMap;
 
 	public SparseHashMatrix(int rows, int cols) {
 		super(rows, cols);
-		matrix = new HashMap<IntegerTwoTuple, Double>();
+		elementMap = new HashMap<IntegerTwoTuple, Double>();
 	}
 
 	public Set<IntegerTwoTuple> getTuples(){
-		return matrix.keySet();
+		return elementMap.keySet();
 	}
 
 	public Matrix copyMatrix() {
-		return null;
+		Matrix copy = new SparseHashMatrix(getNumRows(), getNumCols());
+		Set<IntegerTwoTuple> tuples = elementMap.keySet();
+		
+		for(IntegerTwoTuple t : tuples){
+			copy.setElement(t.getRow(), t.getCol(), elementMap.get(t));
+		}
+		
+		return copy;
 	}
 
 	public double getElement(int row, int col) {
@@ -32,7 +39,7 @@ public class SparseHashMatrix extends Matrix {
 		if(row < numRows && col < numCols){
 			IntegerTwoTuple coords = IntegerTwoTuple.getTuple(row, col);
 
-			Double d =  matrix.get(coords);
+			Double d =  elementMap.get(coords);
 
 			if(d == null){
 				return 0.0;
@@ -49,7 +56,7 @@ public class SparseHashMatrix extends Matrix {
 		if(PRECISION < Math.abs(value)){
 			IntegerTwoTuple coords = IntegerTwoTuple.getTuple(row, col);
 
-			matrix.put(coords, value);
+			elementMap.put(coords, value);
 		}
 
 	}
