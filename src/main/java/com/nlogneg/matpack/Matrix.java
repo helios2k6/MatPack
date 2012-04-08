@@ -2,7 +2,7 @@ package com.nlogneg.matpack;
 
 import com.nlogneg.matpack.exceptions.MatrixOutOfBoundsException;
 
-public abstract class Matrix {
+public abstract class Matrix{
 	
 	private final int rows, cols;
 	
@@ -19,6 +19,14 @@ public abstract class Matrix {
 	
 	public final int getNumCols(){
 		return cols;
+	}
+	
+	@Override
+	public boolean equals(Object object){
+		if(object instanceof Matrix){
+			return equals((Matrix)object);
+		}
+		return false;
 	}
 	
 	public boolean equals(Matrix matrixB){

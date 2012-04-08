@@ -2,7 +2,6 @@ package com.nlogneg.matpack.common;
 
 import java.util.HashMap;
 
-
 public class IntegerTwoTuple {
 	private final int row;
 	private final int col;
