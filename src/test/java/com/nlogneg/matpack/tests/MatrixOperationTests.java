@@ -34,8 +34,8 @@ public class MatrixOperationTests {
 	private double SCALAR_MULTIPLE = 3.0;
 	private double SCALAR_DIVIDE = 4.0;
 
-	private int speedTestRowSize = 500;
-	private int speedTestColSize = 500;
+	private int speedTestRowSize = 1800;
+	private int speedTestColSize = 1800;
 
 	@Before
 	public void init(){
