@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.nlogneg.matpack.Matrix;
 import com.nlogneg.matpack.exceptions.InvalidDimensionException;
+import com.nlogneg.matpack.gauss.SingleThreadedSolver;
 import com.nlogneg.matpack.matrices.StandardMatrix;
 
 public class MatrixOperations {
@@ -133,6 +134,61 @@ public class MatrixOperations {
 		return operations;
 	}
 
+	private static List<Runnable> generateTransposeOperations(
+			Matrix a, 
+			Matrix result, 
+			int numElements,
+			int numProcessors){
+
+		int predominateSublistSize = numElements / numProcessors;
+		
+		//Don't have enough elements for each processor, just going to default to 
+		//single threaded
+		if(predominateSublistSize < 1){
+			numProcessors = 1;
+			predominateSublistSize = numElements;
+		}
+		
+		//This is where we load balance properly
+		//Calculate how many excess elements the last thread would have to process
+		int numExcessElements = (a.getNumRows() - (numProcessors - 1) * predominateSublistSize) - predominateSublistSize - 1;
+		
+		List<Runnable> operations = new ArrayList<Runnable>();
+		
+		int lastEndingIndex = 0;
+
+		for(int i = 0; i < numProcessors - 1; i++){
+			int sizeOfCurrentList = predominateSublistSize;
+			
+			//Add extra element to this current list 
+			if(numExcessElements > 0){
+				sizeOfCurrentList++;
+				numExcessElements--;
+			}
+			
+			TransposeThreadedOperation op = new TransposeThreadedOperation(
+					a, 
+					result, 
+					lastEndingIndex, 
+					lastEndingIndex + sizeOfCurrentList);
+
+			lastEndingIndex += sizeOfCurrentList;
+			
+			operations.add(op);
+		}
+
+		//Correct last operation
+		TransposeThreadedOperation op = new TransposeThreadedOperation(
+				a, 
+				result, 
+				(numProcessors - 1) * predominateSublistSize, 
+				a.getNumRows());
+
+		operations.add(op);
+
+		return operations;
+	}
+	
 	private static List<Runnable> generateAddOperations(Matrix a, Matrix b, Matrix result){
 		return generateOperations(a, b, result, MatrixOperationEnum.ADD, a.getNumRows(), NUMBER_OF_PROCESSORS);
 	}
@@ -153,6 +209,10 @@ public class MatrixOperations {
 		return generateScalarOperations(a, result, scalar, MatrixOperationEnum.DIVIDE_SCALAR, a.getNumRows(), NUMBER_OF_PROCESSORS);
 	}
 
+	private static List<Runnable> generateTransposeOperations(Matrix a, Matrix result){
+		return generateTransposeOperations(a, result, a.getNumRows(), NUMBER_OF_PROCESSORS);
+	}
+	
 	private static boolean checkAdditionAndSubtractionDimenions(Matrix a, Matrix b){
 		return (a.getNumRows() == b.getNumRows()) && (a.getNumCols() == b.getNumCols());
 	}
@@ -243,12 +303,26 @@ public class MatrixOperations {
 		return result;
 	}
 
-	public static Matrix performGaussianElimination(Matrix a){
-		return null;
+	public static Matrix refMatrix(Matrix a){
+		Matrix result = a.copyMatrix();
+		SingleThreadedSolver.getInstance().rowReduce(result);
+		return result;
 	}
 
+	public static Matrix rrefMatrix(Matrix a) throws Exception{
+		Matrix result = a.copyMatrix();
+		SingleThreadedSolver.getInstance().rowReduceToEchelonForm(result);
+		return result;
+	}
+	
 	public static Matrix transpose(Matrix a){
-		return null;
+		Matrix result = new StandardMatrix(a.getNumCols(), a.getNumRows());
+		
+		List<Runnable> ops = generateTransposeOperations(a, result);
+		
+		executeThreadedOps(ops);
+		
+		return result;
 	}
 
 	public static Matrix inverse(Matrix a) throws InvalidDimensionException{

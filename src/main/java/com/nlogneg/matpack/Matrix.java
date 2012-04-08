@@ -84,6 +84,7 @@ public abstract class Matrix{
 	public abstract Matrix copyMatrix();
 	
 	public abstract double getElement(int row, int col) throws MatrixOutOfBoundsException;
+	public abstract double getElementUsingColMajor(int row, int col) throws MatrixOutOfBoundsException;
 	public abstract void setElement(int row, int col, double value);
 	
 }

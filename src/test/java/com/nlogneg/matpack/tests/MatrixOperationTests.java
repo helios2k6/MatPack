@@ -24,17 +24,19 @@ public class MatrixOperationTests {
 	private Matrix invariantMultiply1;
 	private Matrix invariantMultiply2;
 	private Matrix invariantMultiply3;
-	
+
 	private Matrix invariantMultiplyScalar;
-	
+
 	private Matrix invariantDivideScalar;
+
+	private Matrix invariantTranspose;
 
 	private double SCALAR_MULTIPLE = 3.0;
 	private double SCALAR_DIVIDE = 4.0;
-	
-	private int speedTestRowSize = 1007;
-	private int speedTestColSize = 1007;
-	
+
+	private int speedTestRowSize = 500;
+	private int speedTestColSize = 500;
+
 	@Before
 	public void init(){
 		matrixA = new StandardMatrix(2, 2);
@@ -87,20 +89,24 @@ public class MatrixOperationTests {
 		invariantMultiply3.setElement(1, 0, 30);
 		invariantMultiply3.setElement(1, 1, 12);
 		invariantMultiply3.setElement(1, 2, 8);
-		
+
 		invariantMultiplyScalar = new StandardMatrix(2, 2);
 		invariantMultiplyScalar.setElement(0, 0, matrixA.getElement(0, 0)*SCALAR_MULTIPLE);
 		invariantMultiplyScalar.setElement(0, 1, matrixA.getElement(0, 1)*SCALAR_MULTIPLE);
 		invariantMultiplyScalar.setElement(1, 0, matrixA.getElement(1, 0)*SCALAR_MULTIPLE);
 		invariantMultiplyScalar.setElement(1, 1, matrixA.getElement(1, 1)*SCALAR_MULTIPLE);
-		
+
 		invariantDivideScalar = new StandardMatrix(2, 2);
 		invariantDivideScalar.setElement(0, 0, matrixA.getElement(0, 0)/SCALAR_DIVIDE);
 		invariantDivideScalar.setElement(0, 1, matrixA.getElement(0, 1)/SCALAR_DIVIDE);
 		invariantDivideScalar.setElement(1, 0, matrixA.getElement(1, 0)/SCALAR_DIVIDE);
 		invariantDivideScalar.setElement(1, 1, matrixA.getElement(1, 1)/SCALAR_DIVIDE);
+
+		invariantTranspose = new StandardMatrix(1, 2); //Transpose of C
+		invariantTranspose.setElement(0, 0, 4);
+		invariantTranspose.setElement(0, 1, 1);
 	}
-	
+
 	@Test
 	public void testAdd() throws InvalidDimensionException{
 		Matrix result = MatrixOperations.add(matrixA, matrixB);
@@ -127,7 +133,7 @@ public class MatrixOperationTests {
 	@Test
 	public void speedTestDense() throws InvalidDimensionException{
 		Random random = new Random(5050);
-		
+
 		//Raw speed test - Dense
 		Matrix arrayMatrix = new StandardMatrix(speedTestRowSize, speedTestColSize);
 
@@ -137,9 +143,9 @@ public class MatrixOperationTests {
 				arrayMatrix.setElement(i, j, ranD);
 			}
 		}
-		
+
 		System.out.println("Matrix Size (dense): " + arrayMatrix.getNumRows() + "x" + arrayMatrix.getNumCols());
-		
+
 		//Calculate addition test
 		Calendar beforeArrayTime = Calendar.getInstance();
 		MatrixOperations.add(arrayMatrix, arrayMatrix);
@@ -155,7 +161,7 @@ public class MatrixOperationTests {
 
 		System.out.println("Array Matrix Multiplication Speed (Dense): " + 
 				(afterArrayTimeMulti.getTimeInMillis() - beforeArrayTimeMulti.getTimeInMillis()) + " milliseconds");
-		
+
 		//Calculate Scalar stuff
 		//Multiplication
 		Calendar beforeArrayTimeMultiScalar = Calendar.getInstance();
@@ -172,7 +178,7 @@ public class MatrixOperationTests {
 
 		System.out.println("Array Matrix Scalar Division Speed (Dense): " + 
 				(afterArrayTimeDivideScalar.getTimeInMillis() - beforeArrayTimeDivideScalar.getTimeInMillis()) + " milliseconds");
-		
+
 		System.out.println();
 	}
 
@@ -189,9 +195,9 @@ public class MatrixOperationTests {
 				arrayMatrix.setElement(i, j, ranD);
 			}
 		}
-		
+
 		System.out.println("Matrix Size (sparse): " + arrayMatrix.getNumRows() + "x" + arrayMatrix.getNumCols());
-		
+
 		//Calculate addition test
 		Calendar beforeArrayTime = Calendar.getInstance();
 		MatrixOperations.add(arrayMatrix, arrayMatrix);
@@ -206,7 +212,7 @@ public class MatrixOperationTests {
 
 		System.out.println("Array Matrix Multiplication Speed (Sparse): " + 
 				(afterArrayTimeMulti.getTimeInMillis() - beforeArrayTimeMulti.getTimeInMillis()) + " milliseconds");
-		
+
 		//Calculate Scalar stuff
 		//Multiplication
 		Calendar beforeArrayTimeMultiScalar = Calendar.getInstance();
@@ -223,16 +229,58 @@ public class MatrixOperationTests {
 
 		System.out.println("Array Matrix Scalar Division Speed (Sparse): " + 
 				(afterArrayTimeDivideScalar.getTimeInMillis() - beforeArrayTimeDivideScalar.getTimeInMillis()) + " milliseconds");
-		
+
 		System.out.println();
 	}
-	
+
 	@Test
 	public void testScalarOperations(){
 		Matrix resultM = MatrixOperations.multiplyScalar(matrixA, SCALAR_MULTIPLE);
 		Matrix resultD = MatrixOperations.divideByScalar(matrixA, SCALAR_DIVIDE);
-		
+
 		Assert.assertEquals(resultM, invariantMultiplyScalar);
 		Assert.assertEquals(resultD, invariantDivideScalar);
+	}
+
+	@Test
+	public void testTranspose(){
+		Matrix resultT = MatrixOperations.transpose(matrixC);
+		Assert.assertEquals(resultT, invariantTranspose);
+	}
+
+	@Test
+	public void testRef(){
+		System.out.println("Result Original [REF]: " + matrixD);
+		Matrix result = MatrixOperations.refMatrix(matrixD);
+		System.out.println(result);
+	}
+
+	@Test
+	public void testRref() throws Exception{
+		System.out.println("Result Original [RREF]: " + matrixD);
+		Matrix result = MatrixOperations.rrefMatrix(matrixD);
+		System.out.println(result);
+	}
+
+	@Test
+	public void testRrefSpeed() throws Exception{
+		Random random = new Random(5050);
+
+		//Raw speed test
+		Matrix arrayMatrix = new StandardMatrix(speedTestRowSize, speedTestColSize);
+
+		System.out.println("Testing RREF on " + arrayMatrix.getNumRows() + "x" + arrayMatrix.getNumCols() + " Matrix");
+		for(int i = 0; i < speedTestRowSize; i++){
+			for(int j = 0; j < speedTestColSize; j++){
+				double ranD = random.nextDouble();
+				arrayMatrix.setElement(i, j, ranD);
+			}
+		}
+		
+		Calendar before = Calendar.getInstance();
+		MatrixOperations.rrefMatrix(arrayMatrix);
+		Calendar after = Calendar.getInstance();
+
+		System.out.println("RREF Speed: " + (after.getTimeInMillis() - before.getTimeInMillis()) + " milliseconds");
 	}
 }

@@ -1,7 +1,6 @@
 package com.nlogneg.matpack.operations;
 
 import com.nlogneg.matpack.Matrix;
-import com.nlogneg.matpack.matrices.StandardMatrix;
 
 public class StandardThreadedOperation implements Runnable{
 
@@ -13,8 +12,6 @@ public class StandardThreadedOperation implements Runnable{
 	private int rowEnd;
 
 	private MatrixOperationEnum operation;
-
-	private boolean isUsingStandardMatrix;
 
 	/**
 	 * 
@@ -41,7 +38,6 @@ public class StandardThreadedOperation implements Runnable{
 
 		this.operation = operation;
 
-		this.isUsingStandardMatrix = matrixA instanceof StandardMatrix && matrixB instanceof StandardMatrix;
 	}
 
 	private void add(){
@@ -69,27 +65,7 @@ public class StandardThreadedOperation implements Runnable{
 
 				for(int k = 0; k < matrixB.getNumRows(); k++){
 					double matrixADouble = matrixA.getElement(i, k);
-					double matrixBDouble = matrixB.getElement(k, j);
-
-					runningSum += matrixADouble * matrixBDouble;
-				}
-
-				result.setElement(i, j, runningSum);
-			}
-		}
-	}
-
-	private void multiplyWithStandardMatrix(){
-		StandardMatrix matrixAOverride = (StandardMatrix)matrixA;
-		StandardMatrix matrixBOverride = (StandardMatrix)matrixB;
-
-		for(int i = rowStart; i < rowEnd; i++){
-			for(int j = 0; j < result.getNumCols(); j++){
-				double runningSum = 0;
-
-				for(int k = 0; k < matrixBOverride.getNumRows(); k++){
-					double matrixADouble = matrixAOverride.getElement(i, k);
-					double matrixBDouble = matrixBOverride.getElementUsingColMajor(k, j);
+					double matrixBDouble = matrixB.getElementUsingColMajor(k, j);
 
 					runningSum += matrixADouble * matrixBDouble;
 				}
@@ -102,31 +78,23 @@ public class StandardThreadedOperation implements Runnable{
 	@Override
 	public void run() {
 		try {
+			TicketMaster.getInstance().GetTicket();
 			switch(operation){
 			case ADD:
-				TicketMaster.getInstance().GetTicket();
 				add();
-				TicketMaster.getInstance().ReplaceTicket();
 				break;
 			case SUBTRACT:
-				TicketMaster.getInstance().GetTicket();
 				subtract();
-				TicketMaster.getInstance().ReplaceTicket();
 				break;
 			case MULTIPLY:
-				TicketMaster.getInstance().GetTicket();
-				if(isUsingStandardMatrix){
-					multiplyWithStandardMatrix();
-				}else{
-					multiply();
-				}
-				TicketMaster.getInstance().ReplaceTicket();
+				multiply();
 				break;
 			}
 		} catch (InterruptedException e) {
 			e.printStackTrace();
+		} finally{
+			TicketMaster.getInstance().ReplaceTicket();
 		}
-
 	}
 
 }

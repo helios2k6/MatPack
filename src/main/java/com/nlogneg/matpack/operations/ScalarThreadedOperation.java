@@ -45,14 +45,22 @@ public class ScalarThreadedOperation implements Runnable{
 
 	@Override
 	public void run() {
-		switch(operation){
-		case DIVIDE_SCALAR:
-			divideScalar();
-			break;
-		case MULTIPLY_SCALAR:
-			multiplyScalar();
-			break;
+		try {
+			TicketMaster.getInstance().GetTicket();
+			switch(operation){
+			case DIVIDE_SCALAR:
+				divideScalar();
+				break;
+			case MULTIPLY_SCALAR:
+				multiplyScalar();
+				break;
+			}
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		} finally {
+			TicketMaster.getInstance().ReplaceTicket();
 		}
+
 	}
 
 }

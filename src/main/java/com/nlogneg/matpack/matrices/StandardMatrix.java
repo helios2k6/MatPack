@@ -32,6 +32,7 @@ public class StandardMatrix extends Matrix{
 		return rowMajor[row][col];
 	}
 	
+	@Override
 	public double getElementUsingColMajor(int row, int col) throws MatrixOutOfBoundsException{
 		return colMajor[col][row];
 	}
