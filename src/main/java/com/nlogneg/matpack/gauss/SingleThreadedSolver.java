@@ -164,7 +164,6 @@ public class SingleThreadedSolver implements GaussSolver {
 
 		long after = Calendar.getInstance().getTimeInMillis();
 
-		System.out.println("Spent " + (after - before) + "ms in BackSub");
 	}
 
 	@Override
@@ -192,8 +191,6 @@ public class SingleThreadedSolver implements GaussSolver {
 			}
 		}
 		long after = Calendar.getInstance().getTimeInMillis();
-
-		System.out.println("Spent " + (after - before) + "ms in Row Reduction");
 	}
 
 	private class InternalBacksubber implements Runnable{

@@ -34,8 +34,8 @@ public class MatrixOperationTests {
 	private double SCALAR_MULTIPLE = 3.0;
 	private double SCALAR_DIVIDE = 4.0;
 
-	private int speedTestRowSize = 1800;
-	private int speedTestColSize = 1800;
+	private int speedTestRowSize = 100;
+	private int speedTestColSize = 100;
 
 	@Before
 	public void init(){
@@ -282,5 +282,12 @@ public class MatrixOperationTests {
 		Calendar after = Calendar.getInstance();
 
 		System.out.println("RREF Speed: " + (after.getTimeInMillis() - before.getTimeInMillis()) + " milliseconds");
+	}
+	
+	@Test
+	public void testInverse() throws InvalidDimensionException {
+		System.out.println("Testing inverse");
+		Matrix result = MatrixOperations.inverse(matrixA);
+		System.out.println(result);
 	}
 }

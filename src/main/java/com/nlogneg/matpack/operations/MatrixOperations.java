@@ -329,7 +329,30 @@ public class MatrixOperations {
 		if(!checkInverseDimensions(a)){
 			throw new InvalidDimensionException();
 		}
-		return null;
+		
+		Matrix augmentedMatrix = new StandardMatrix(a.getNumRows(), a.getNumCols() * 2);
+		
+		//Copy matrix into augmented matrix
+		a.copyMatrixTo(augmentedMatrix);
+		
+		//Then set the diagonal
+		for(int i = 0; i < augmentedMatrix.getNumRows(); i++){
+			augmentedMatrix.setElement(i, i + a.getNumCols(), 1);
+		}
+		
+		//Row reduce stuff
+		SingleThreadedSolver.getInstance().rowReduceToEchelonForm(augmentedMatrix);
+		
+		//Get the augmented part of the matrix
+		Matrix result = new StandardMatrix(a.getNumRows(), a.getNumCols());
+		for(int i = 0; i < augmentedMatrix.getNumRows(); i++){
+			for(int j = a.getNumCols(); j < augmentedMatrix.getNumCols(); j++){
+				result.setElement(i, j - a.getNumCols(), augmentedMatrix.getElement(i, j));
+			}
+		}
+		
+		
+		return result;
 	}
 
 
