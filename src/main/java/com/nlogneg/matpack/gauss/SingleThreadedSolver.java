@@ -1,7 +1,6 @@
 package com.nlogneg.matpack.gauss;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 import com.nlogneg.matpack.Matrix;
@@ -147,7 +146,6 @@ public class SingleThreadedSolver implements GaussSolver {
 	}
 
 	private void backSubstitute(Matrix a) throws Exception{
-		long before = Calendar.getInstance().getTimeInMillis();
 		List<Thread> threads = new ArrayList<Thread>();
 		
 		List<Runnable> ops = generateOperations(a, a.getNumRows(), MatrixOperations.NUMBER_OF_PROCESSORS);
@@ -161,10 +159,6 @@ public class SingleThreadedSolver implements GaussSolver {
 		for(Thread t : threads){
 			t.join();
 		}
-
-		long after = Calendar.getInstance().getTimeInMillis();
-
-		System.out.println("Spent " + (after - before) + "ms in BackSub");
 	}
 
 	@Override
@@ -179,7 +173,6 @@ public class SingleThreadedSolver implements GaussSolver {
 
 	@Override
 	public void rowReduce(Matrix a) {
-		long before = Calendar.getInstance().getTimeInMillis();
 		for(int row = 0; row < a.getNumRows() && row < a.getNumCols(); row++){
 			int pivotRow = selectPivot(a, row, row);
 			swapRows(a, row, pivotRow);
@@ -191,13 +184,9 @@ public class SingleThreadedSolver implements GaussSolver {
 				a.setElement(belowPivot, row, 0);
 			}
 		}
-		long after = Calendar.getInstance().getTimeInMillis();
-
-		System.out.println("Spent " + (after - before) + "ms in Row Reduction");
 	}
 
 	private class InternalBacksubber implements Runnable{
-
 		private Matrix matrix;
 		private int rowStart;
 		private int rowEnd;
