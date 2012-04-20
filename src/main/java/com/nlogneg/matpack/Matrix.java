@@ -80,6 +80,17 @@ public abstract class Matrix{
 		return buffer.toString();
 	}
 	
+	public void copyMatrixTo(Matrix b) throws MatrixOutOfBoundsException{
+		if(rows > b.getNumRows() || cols > b.getNumCols()){
+			throw new MatrixOutOfBoundsException();
+		}
+		
+		for(int i = 0; i < rows; i++){
+			for(int j = 0; j < cols; j++){
+				b.setElement(i, j, getElement(i, j));
+			}
+		}
+	}
 	
 	public abstract Matrix copyMatrix();
 	
