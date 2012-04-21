@@ -290,4 +290,10 @@ public class MatrixOperationTests {
 		Matrix result = MatrixOperations.inverse(matrixA);
 		System.out.println(result);
 	}
+	
+	@Test
+	public void testToMatlabString(){
+		System.out.println("Printing matlab complient matrix");
+		System.out.println(matrixA.toMatlabMatrixString());
+	}
 }
