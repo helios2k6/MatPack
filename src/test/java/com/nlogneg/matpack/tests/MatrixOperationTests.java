@@ -287,7 +287,11 @@ public class MatrixOperationTests {
 	@Test
 	public void testInverse() throws InvalidDimensionException {
 		System.out.println("Testing inverse");
-		Matrix result = MatrixOperations.inverse(matrixA);
+		Matrix odd = new StandardMatrix(2, 2);
+		odd.setElement(0, 0, 60);
+		odd.setElement(1,1,60);
+				
+		Matrix result = MatrixOperations.inverse(odd);
 		System.out.println(result);
 	}
 	

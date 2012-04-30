@@ -80,7 +80,7 @@ public class SingleThreadedSolver implements GaussSolver {
 
 		for(int i = rowStart + 1; i < a.getNumRows(); i++){
 			double currentValue = a.getElementUsingColMajor(i, col);
-			if(Math.abs(lastValue - currentValue) > Matrix.PRECISION){
+			if((currentValue - lastValue) > Matrix.PRECISION){
 				selectedRow = i;
 				lastValue = currentValue;
 			}
